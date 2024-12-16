@@ -30,10 +30,12 @@
             padding: 0;
         }
 
-        body, html {
-    overflow: hidden; /* Menonaktifkan scroll pada seluruh halaman */
-    height: 100%;
-}
+        body,
+        html {
+            overflow: hidden;
+            /* Menonaktifkan scroll pada seluruh halaman */
+            height: 100%;
+        }
 
 
         #map {
@@ -41,44 +43,71 @@
             height: 90vh;
         }
 
+        /* Style untuk navbar */
         .custom-navbar {
             background: linear-gradient(90deg, #e91e63, #9c27b0);
-            /* Gradasi dari pink ke ungu */
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .custom-navbar:hover {
             background: linear-gradient(90deg, #f06292, #ba68c8);
-            /* Gradasi lebih terang saat hover */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            /* Menambahkan bayangan yang lebih tajam saat hover */
         }
 
         .navbar-nav .nav-link {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
             padding: 10px 15px;
             transition: color 0.3s ease;
         }
 
-        .navbar-nav .nav-link:hover {
-            color: #fff !important;
-            /* Menjaga warna teks putih saat hover */
-            background-color: rgba(0, 0, 0, 0.1);
-            /* Menambahkan latar belakang transparan saat hover */
+        /* Menata navbar dengan flexbox untuk satu baris */
+        .navbar-nav {
+            display: flex;
+            /* Menampilkan semua item dalam satu baris */
+            justify-content: center;
+            /* Menyelaraskan item di tengah */
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .navbar-nav .nav-item {
+            margin-right: 20px;
+            /* Menambah jarak antar item */
+        }
+
+        .navbar-nav .nav-item:last-child {
+            margin-right: 0;
+            /* Menghapus margin di akhir item */
         }
 
         .navbar-brand {
             font-size: 1.7rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #fff;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
-        .navbar-toggler-icon {
-            background-color: white;
+        .info-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            color: #666;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
         }
 
+        .info-footer a {
+            color: #e91e63;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .info-footer a:hover {
+            color: #ba68c8;
+        }
 
         /* Style untuk legend */
         .legend {
@@ -175,12 +204,25 @@
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost/pgweb/responsi/tentang.html"
+                            target="_blank">
+                            <i class="fa-solid fa-database"></i> Home
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="http://geoportal.slemankab.go.id/"
                             target="_blank">
                             <i class="fa-solid fa-database"></i> Sumber data
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://localhost/pgweb/responsi/index.php"
+                            target="_blank">
+                            <i class="fa-solid fa-database"></i> Data Rumah Sakit
                         </a>
                     </li>
                     <li class="nav-item">
