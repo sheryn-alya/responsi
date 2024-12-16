@@ -125,7 +125,10 @@
     </nav>
 
     <div class="container mt-4">
-        <h2 class="text-center mb-4">Data Rumah Sakit Kabupaten Sleman</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="text-center">Data Rumah Sakit Kabupaten Sleman</h2>
+            <a href="input.php" class="btn btn-custom">Tambah Data</a>
+        </div>
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
