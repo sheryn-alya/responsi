@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Data Rumah Sakit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Styling umum untuk halaman */
+        body {
+            background-color: #f7f1f9;
+            font-family: 'Poppins', sans-serif; /* Menggunakan font Poppins */
+        }
+
+        /* Styling navbar */
+        .navbar {
+            background-color: #9b4d96;
+            font-family: 'Poppins', sans-serif; /* Navbar menggunakan font Poppins */
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-weight: 600; /* Font bold untuk nama navbar */
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand:hover {
+            color: #ff66b2; /* Warna pink saat hover */
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+            font-weight: 500; /* Font sedang untuk link */
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ff66b2; /* Warna pink saat hover */
+        }
+
+        /* Styling form dan container */
+        #title {
+            text-align: center;
+            margin-top: 20px;
+            color: #9b4d96;
+        }
+
+        .container {
+            margin-top: 30px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            color: #9b4d96;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #9b4d96;
+            transition: 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #ab6bc0;
+            box-shadow: 0 0 5px rgba(171, 107, 192, 0.6);
+        }
+
+        .btn {
+            background-color: #ab6bc0;
+            border-color: #9b4d96;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #9b4d96;
+            border-color: #ab6bc0;
+        }
+
+        #informasi {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">WebGIS Rumah Sakit</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 id="title">Perbarui Data Rumah Sakit</h2>
+        <form action="/pgweb/responsi/index.php" onsubmit="return validateForm(event)" method="post">
+            <div class="form-group">
+                <label for="id">ID Rumah Sakit:</label>
+                <input type="text" class="form-control" id="id" name="id" readonly value="">
+            </div>
+
+            <div class="form-group">
+                <label for="nama_rs">Nama Rumah Sakit:</label>
+                <input type="text" class="form-control" id="nama_rs" name="nama_rs" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="alamat">Alamat:</label>
+                <input type="text" class="form-control" id="alamat" name="alamat" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="longitude">Longitude:</label>
+                <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="latitude">Latitude:</label>
+                <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="kelas">Kelas:</label>
+                <input type="text" class="form-control" id="kelas" name="kelas" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="pemilik">Pemilik:</label>
+                <input type="text" class="form-control" id="pemilik" name="pemilik" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="edit">Pemilik:</label>
+                <input type="text" class="form-control" id="edit" name="edit" value="">
+            </div>
+
+            <div class="form-group">
+                <label for="hapus">Pemilik:</label>
+                <input type="text" class="form-control" id="hapus" name="hapus" value="">
+            </div>
+
+            <button type="submit" name="edit" class="btn btn-primary">Simpan Perubahan</button>
+        </form>
+
+        <p id="informasi"></p>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            let longitude = document.getElementById("longitude").value;
+            let latitude = document.getElementById("latitude").value;
+            let informasi = "";
+
+            // Cek apakah longitude valid
+            if (longitude === "" || isNaN(longitude)) {
+                informasi += "Longitude harus berupa angka valid.<br>";
+            }
+
+            // Cek apakah latitude valid
+            if (latitude === "" || isNaN(latitude)) {
+                informasi += "Latitude harus berupa angka valid.<br>";
+            }
+
+            // Jika ada informasi error, tampilkan dan batalkan form submission
+            if (informasi !== "") {
+                document.getElementById("informasi").innerHTML = informasi;
+                event.preventDefault();  // Membatalkan form submission
+                return false;
+            }
+
+            return true;  // Form dapat dikirim jika validasi berhasil
+        }
+    </script>
+</body>
+
+</html>

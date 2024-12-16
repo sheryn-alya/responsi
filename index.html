@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- leaflet css link  -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="plugin/leaflet-search-master/dist/leaflet-search.min.css">
+
+    <link rel="stylesheet"
+        href="plugin/Leaflet.defaultextent-master/Leaflet.defaultextent-master/dist/leaflet.defaultextent.css">
+
+    <title>Web-GIS</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+    overflow: hidden; /* Menonaktifkan scroll pada seluruh halaman */
+    height: 100%;
+}
+
+
+        #map {
+            width: 100%;
+            height: 90vh;
+        }
+
+        .custom-navbar {
+            background: linear-gradient(90deg, #e91e63, #9c27b0);
+            /* Gradasi dari pink ke ungu */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-navbar:hover {
+            background: linear-gradient(90deg, #f06292, #ba68c8);
+            /* Gradasi lebih terang saat hover */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            /* Menambahkan bayangan yang lebih tajam saat hover */
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 10px 15px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #fff !important;
+            /* Menjaga warna teks putih saat hover */
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Menambahkan latar belakang transparan saat hover */
+        }
+
+        .navbar-brand {
+            font-size: 1.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: white;
+        }
+
+
+        /* Style untuk legend */
+        .legend {
+            background: rgba(255, 182, 193, 0.9);
+            /* Warna pink dengan transparansi */
+            padding: 15px;
+            /* Spasi lebih luas */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            /* Bayangan lebih lembut */
+            font-size: 13px;
+            /* Font sedikit lebih besar */
+            border-radius: 8px;
+            /* Sudut lebih membulat */
+            max-width: 250px;
+            /* Lebar maksimal lebih besar */
+            max-height: 300px;
+            /* Batasi tinggi */
+            overflow-y: auto;
+            /* Scroll otomatis untuk konten panjang */
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            /* Jarak antar elemen */
+            z-index: 1500;
+            /* Menjaga legend tetap di atas peta */
+        }
+
+        /* Style untuk gambar legenda */
+        .legend img {
+            width: 100%;
+            /* Gambar memenuhi kontainer */
+            height: auto;
+            cursor: pointer;
+            border-radius: 6px;
+            /* Sudut gambar lebih lembut */
+            border: 1px solid #ddd;
+            /* Bingkai halus di sekitar gambar */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        /* Efek hover pada gambar */
+        .legend img:hover {
+            transform: scale(1.05);
+            /* Sedikit pembesaran */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            /* Tambahkan bayangan saat hover */
+        }
+
+        /* Judul legenda */
+        .legend h4 {
+            font-size: 16px;
+            /* Ukuran lebih besar untuk penekanan */
+            margin-bottom: 10px;
+            text-align: center;
+            color: #e91e63;
+            /* Warna pink tua */
+            font-weight: bold;
+            /* Tulisan bold */
+            text-transform: uppercase;
+            /* Huruf besar semua */
+            letter-spacing: 1px;
+            /* Spasi antar huruf */
+        }
+
+        /* Scrollbar untuk konten panjang */
+        .legend::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .legend::-webkit-scrollbar-thumb {
+            background-color: #ff69b4;
+            /* Scrollbar warna pink */
+            border-radius: 4px;
+        }
+
+        .legend::-webkit-scrollbar-thumb:hover {
+            background-color: #ff1493;
+            /* Warna pink lebih gelap saat hover */
+        }
+
+        .legend::-webkit-scrollbar-track {
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="font-size: 1.5rem; font-weight: bold;">WebGIS Persebaran Titik Rumah
+                Sakit pada Kabupaten Sleman</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="http://geoportal.slemankab.go.id/"
+                            target="_blank">
+                            <i class="fa-solid fa-database"></i> Sumber data
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fa-solid fa-info-circle"></i> Informasi Pembuat
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    </li>
+    </ul>
+    </div>
+    </div>
+    </nav>
+    <div id="map"></div>
+
+    <!-- UNTUK INFORMASI PEMBUAT PADA NAVBAR YANG DISUSUN DALAM BENTUK TABEL -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Pembuat</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <!-- th untuk menebalkan hurus didalamnya sedangkan td hanya seperti tulisan biasa -->
+                        <tr>
+                            <th>Pembuat</th>
+                            <td>Sheryn Alya Azzahra</td>
+                        </tr>
+                        <tr>
+                            <th>NIM</th>
+                            <td>23/515601/SV/22583</td>
+                        <tr>
+                            <th>Mata Kuliah</th>
+                            <td>PG WEB</td>
+                        </tr>
+                        <tr>
+                            <th>Kelas</th>
+                            <td>Kelas A</td>
+                        </tr>
+
+                        <th>Email</th>
+                        <td><a href="mailto:sherynalya24@mail.ugm.ac.id">sherynalyaazzahra2004@mail.ugm.ac.id</a></td>
+                        </tr>
+                        <tr>
+                            <th>Instagram</th>
+                            <td><a href="https://www.instagram.com/shrynn4_" target="_blank">@shrynn4_</a></td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- UNTUK MENGATUR TOMBOL TUTUP PADA MODAL PEMBUAT DAN MERESPON KETIKA DI KLIK -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="map"></div>
+</body>
+
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+<!-- leaflet js link  -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- jquery link  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="plugin/leaflet-search-master/dist/leaflet-search.min.js"></script>
+
+<script src="plugin/Leaflet.defaultextent-master/Leaflet.defaultextent-master/dist/leaflet.defaultextent.js"></script>
+
+<!-- leaflet geoserver request link  -->
+<script src="lib/L.Geoserver.js"></script>
+
+<script>
+    var map = L.map("map").setView([-7.77433, 110.37367], 11);
+
+    // Base map layer
+    var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    // Buat pane dengan urutan zIndex
+    map.createPane("areaPane"); // Layer area
+    map.createPane("roadPane"); // Layer jalan
+    map.createPane("pointPane"); // Layer titik
+
+    map.getPane("areaPane").style.zIndex = 400; // Paling bawah
+    map.getPane("roadPane").style.zIndex = 500; // Di atas area
+    map.getPane("pointPane").style.zIndex = 600; // Paling atas
+
+    // Area layer (WMS)
+    var wmsLayer1 = L.Geoserver.wms("http://localhost:8080/geoserver/responsiyeyy/wms", {
+        layers: "jml_penduduk2023",
+        transparent: true,
+        pane: "areaPane", // Tetap di pane area
+    }).addTo(map);
+
+    // Point layer (WMS)
+    var wmsLayer2 = L.Geoserver.wms("https://geoportal.slemankab.go.id/geoserver/wms", {
+        layers: "geonode:a__3404_50kb_pt_sebaran_rumah_sakit_sleman_20",
+        transparent: true,
+        pane: "pointPane", // Tetap di pane titik
+    }).addTo(map);
+
+    // Jalan layer (WMS)
+    var wmsLayer3 = L.Geoserver.wms("https://geoportal.slemankab.go.id/geoserver/wms", {
+        layers: "geonode:a__3404_50kb_ln_jalan_kabupaten_sleman_2020",
+        style: {
+            color: "black",
+            fillOpacity: 1.0,
+            fillColor: "red",
+        },
+        pane: "roadPane", // Pindahkan ke pane jalan
+    }).addTo(map);
+
+
+    // Default extent
+    // Center of map
+    var defaultExtent = [-7.77433, 110.37367];
+    L.control.defaultExtent({
+        text: '📍',
+        title: 'Home'
+    }).addTo(map);
+
+    // Add search control
+    var searchControl = new L.Control.Search({
+        layer: osm,
+        initial: false,
+        zoom: 12,
+        collapsed: true,
+    });
+    map.addControl(searchControl);
+
+    // Layer control
+    var overlayMaps = {
+        "Garis": wmsLayer3,
+        "Area": wmsLayer1,
+        "Titik": wmsLayer2
+    };
+    var baseMaps = {
+        "OpenStreetMap": osm,
+        "Google Satellite": L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            maxZoom: 20
+        }),
+        "ESRI World Imagery": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA',
+            maxZoom: 20
+        })
+    };
+
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    var legendControl = L.control({ position: 'bottomleft' });
+
+    legendControl.onAdd = function () {
+        var div = L.DomUtil.create('div', 'legenda');
+        div.innerHTML = `
+        <h4>LEGENDA</h4>
+        <img src="http://localhost:8080/geoserver/responsiyeyy/wms?request=GetLegendGraphic&format=image/png&layer=jml_penduduk2023" 
+             alt="Legenda Penduduk"
+             title="Legenda jml_penduduk2023" />
+        <img src="https://geoportal.slemankab.go.id/geoserver/wms?request=GetLegendGraphic&format=image/png&layer=geonode:a__3404_50kb_pt_sebaran_rumah_sakit_sleman_20"
+             alt="Legenda Titik Rumah Sakit"
+             title="Legenda Titik Rumah Sakit Sleman" />
+    `;
+        return div;
+    };
+
+    legendControl.addTo(map);
+
+
+
+    function zoomToArea(latlng, zoomLevel) {
+        map.setView(latlng, zoomLevel);
+    }
+
+    // Watermark
+    L.Control.Watermark = L.Control.extend({
+        onAdd: function (map) {
+            var container = L.DomUtil.create("div", "leaflet-control-watermark");
+            var img = L.DomUtil.create("img", "watermark-image");
+            img.src = "icon/logo_SV.png";
+            img.style.width = "200px";
+            container.appendChild(img);
+            return container;
+        },
+    });
+
+
+    // Menambahkan watermark ke peta
+    L.control.watermark = function (opts) {
+        return new L.Control.Watermark(opts);
+    };
+
+    L.control.watermark({ position: "bottomright" }).addTo(map);
+
+
+
+</script>
