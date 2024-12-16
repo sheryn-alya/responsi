@@ -6,11 +6,9 @@ if (isset($_POST['update'])) {
     $alamat = $_POST['alamat'];
     $longitude = $_POST['longitude'];
     $latitude = $_POST['latitude'];
-    $telepon = $_POST['telepon'];
+    $telepon = $_POST['telpon'];
     $kelas = $_POST['kelas'];
-    $pemilik = $_POST['pemilik'];
-    $edit = $_POST['edit'];
-    $hapus = $_POST['hapus'];   
+    $pemilik = $_POST['pemilik'];   
 
     // Pengaturan koneksi database
     $servername = "localhost";
@@ -32,11 +30,9 @@ if (isset($_POST['update'])) {
                 alamat = '$alamat', 
                 longitude = $longitude, 
                 latitude = $latitude, 
-                telepon = '$telepon',
+                telpon = '$telpon',
                 kelas = '$kelas',
                 pemilik = '$pemilik' 
-                edit = '$edit'
-                hapus = '$hapus'
             WHERE id = $id";
 
     /// Eksekusi query update
