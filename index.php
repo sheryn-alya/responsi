@@ -114,13 +114,22 @@
             background-color: #ff66b2;
             color: white;
         }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">WebGIS dengan Database</a>
+            <a class="navbar-brand" href="#">WebGIS Persebaran Titik Rumah
+            Sakit pada Kabupaten Sleman</a>
         </div>
     </nav>
 
